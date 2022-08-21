@@ -5,23 +5,6 @@ const Applyment = require('../models/applyment');
 const sequelize = require("sequelize");
 const { Op } = sequelize;
 
-// 채용공고 등록
-// URI: companys/{companyId}/recruits
-module.exports.createRecruit = async (req, res, next) => {
-  const { companyId } = req.params;
-  const { position, reward, skill, desc } = req.body;
-  await Recruit.create({
-    position,
-    reward,
-    skill,
-    desc,
-    companyId
-  }).then(result => {
-    console.log('✅ createRecruit');
-    res.json(result);
-  }).catch(err => next(err));
-}
-
 // 채용공고 조회 전체
 // URI: /recruits
 module.exports.readAllRecruit = async (req, res, next) => {
@@ -33,14 +16,14 @@ module.exports.readAllRecruit = async (req, res, next) => {
       attributes: { exclude: ['companyId'] },
     },
   }).then(result => {
-    console.log('✅ readAllRecruit');
+    console.log('✅ 모든 채용공고 조회');
     console.log(result)
     res.send(result);
   }).catch(err => next(err));
 }
 
 // 채용공고 검색 조회
-// URI: /recruits/search?q=원티드
+// URI: /recruits/search?q=~~
 module.exports.searchRecruit = async (req, res, next) => {
   const { q } = req.query;
   await Recruit.findAll({
@@ -59,7 +42,7 @@ module.exports.searchRecruit = async (req, res, next) => {
       attributes: { exclude: ['companyId'] },
     },
   }).then(result => {
-    console.log('✅ readAllRecruit');
+    console.log(`✅ '${q}'에 대한 검색 결과`);
     res.send(result);
   }).catch(err => next(err));
 }
@@ -93,39 +76,26 @@ module.exports.readRecruit = async (req, res, next) => {
     }
     delete recruit.companyId;
     recruit.recruitings = companyIdList;
+    console.log(`✅ ${recruit['Company.companyName']} 기업의 '${recruit.position}'채용공고 `)
     res.json(recruit);
   } catch (err) {
     next(err);
   }
-  
 }
 
-// 채용공고 수정
-// URI: recruits/{recruitId}
-module.exports.updateRecruit = async (req, res, next) => {
-  const { recruitId } = req.params;
+// 채용공고 등록
+// URI: /companys/{companyId}/recruits
+module.exports.createRecruit = async (req, res, next) => {
+  const { companyId } = req.params;
   const { position, reward, skill, desc } = req.body;
-  await Recruit.update({
+  await Recruit.create({
     position,
     reward,
     skill,
     desc,
-  }, {
-    where: { recruitId }
+    companyId
   }).then(result => {
-    console.log('✅ updateRecruit');
-    res.json(result);
-  }).catch(err => next(err));
-}
-
-// 채용공고 삭제
-// URI: recruits/{recruitId}
-module.exports.deleteRecruit = async (req, res, next) => {
-  const { recruitId } = req.params;
-  await Recruit.destroy({
-    where: { recruitId }
-  }).then(result => {
-    console.log('✅ deleteRecruit');
+    console.log('✅ 채용공고 등록');
     res.json(result);
   }).catch(err => next(err));
 }
@@ -135,7 +105,6 @@ module.exports.deleteRecruit = async (req, res, next) => {
 module.exports.applyRecruit = async (req, res, next) => {
   const { recruitId } = req.params;
   const { userId } = req.body;
-
   const applyment = await Applyment.findOne({
     raw: true,
     where: { userId, recruitId }
@@ -152,4 +121,34 @@ module.exports.applyRecruit = async (req, res, next) => {
   } else {
     res.send('이미 지원하셨습니다');
   }
+}
+
+// 채용공고 수정
+// URI: recruits/{recruitId}
+module.exports.updateRecruit = async (req, res, next) => {
+  const { recruitId } = req.params;
+  const { position, reward, skill, desc } = req.body;
+  await Recruit.update({
+    position,
+    reward,
+    skill,
+    desc,
+  }, {
+    where: { recruitId }
+  }).then(result => {
+    console.log('✅ 채용공고 수정');
+    res.json(result);
+  }).catch(err => next(err));
+}
+
+// 채용공고 삭제
+// URI: recruits/{recruitId}
+module.exports.deleteRecruit = async (req, res, next) => {
+  const { recruitId } = req.params;
+  await Recruit.destroy({
+    where: { recruitId }
+  }).then(result => {
+    console.log('✅ 채용공고 삭제');
+    res.json(result);
+  }).catch(err => next(err));
 }

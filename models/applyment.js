@@ -4,16 +4,6 @@ const Sequelize = require('sequelize');
 module.exports = class Applyment extends Sequelize.Model {
   static init(sequelize) {
     return super.init({
-      // recruitId: {
-      //   //primaryKey: true,
-      //   type: Sequelize.INTEGER,
-      //   comment: '채용공고 ID',
-      // },
-      // userId: {
-      //   //primaryKey: true,
-      //   type: Sequelize.INTEGER,
-      //   comment: '유저 ID',
-      // },
     }, {
       sequelize,
       timestamps: false,
