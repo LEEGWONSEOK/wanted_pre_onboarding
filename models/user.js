@@ -30,7 +30,10 @@ module.exports = class User extends Sequelize.Model {
   }
 
   static associate(db) {
-    // User : Recruit = N : M
+    // User : Applyment = 1 : N
+    db.User.hasMany(db.Applyment, {
+      foreignKey: 'userId'
+    });
 
   }
 }
