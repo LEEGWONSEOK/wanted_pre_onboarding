@@ -27,11 +27,13 @@ app.use('/', recruitRouter);
 
 // 404
 app.use('*', (req, res, next) => {
-  res.send('404 not found')
+  res.sendStatus(404);
 });
 
+// error
 app.use((err, req, res, next) => {
-  res.locals.message
+  console.error(err);
+  res.sendStatus(500);
 })
 
 app.listen(app.get('port'), () => {
