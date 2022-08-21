@@ -15,9 +15,12 @@ router.get('/recruits/search', recruitCtrl.searchRecruit);
 router.get('/recruits/:recruitId', recruitCtrl.readRecruit);
 
 // 채용공고 수정
-//router.patch('/:recruitId', recruitCtrl.updateRecruit);
+router.patch('/recruits/:recruitId', recruitCtrl.updateRecruit);
 
 // 채용공고 삭제
-//router.delete('/:recruitId', recruitCtrl.deleteRecruit);
+router.delete('/recruits/:recruitId', recruitCtrl.deleteRecruit);
+
+// 채용공고 지원
+router.post('/recruits/:recruitId/apply', recruitCtrl.applyRecruit);
 
 module.exports = router;
